@@ -85,22 +85,33 @@
             (apply (partial my-map f) (map rest seqs))))))
 
 (defn power [n k]
-  :-)
+  (if (zero? k)
+    1
+    (* n (power n (dec k)))))
 
 (defn fib [n]
-  :-)
+  (cond
+   (zero? n) 0
+   (= 1 n) 1
+   :else (+ (fib (dec n))
+            (fib (- n 2)))))
 
 (defn my-repeat [how-many-times what-to-repeat]
-  [:-])
+  (if (>= 0 how-many-times)
+    '()
+    (cons what-to-repeat (my-repeat (dec how-many-times) what-to-repeat))))
 
 (defn my-range [up-to]
-  [:-])
+  (if (>= 0 up-to) '()
+    (cons (dec up-to) (my-range (dec up-to)))))
 
 (defn tails [a-seq]
-  [:-])
+  (if (empty? a-seq)
+    '(())
+    (cons a-seq (tails (rest a-seq)))))
 
 (defn inits [a-seq]
-  [:-])
+  (map reverse (tails (reverse a-seq))))
 
 (defn rotations [a-seq]
   [:-])

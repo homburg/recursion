@@ -113,8 +113,14 @@
 (defn inits [a-seq]
   (map reverse (tails (reverse a-seq))))
 
+(defn rotate [a-seq]
+  (let [shifted (concat (rest a-seq) (take 1 a-seq))]
+    (cons shifted (lazy-seq (rotate shifted)))))
+
 (defn rotations [a-seq]
-  [:-])
+  (if (empty? a-seq)
+    '(())
+    (take (count a-seq) (rotate a-seq))))
 
 (defn my-frequencies-helper [freqs a-seq]
   [:-])

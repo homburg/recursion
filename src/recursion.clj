@@ -111,7 +111,7 @@
     (cons a-seq (tails (rest a-seq)))))
 
 (defn inits [a-seq]
-  (map reverse (tails (reverse a-seq))))
+  (reverse (map reverse (tails (reverse a-seq)))))
 
 (defn rotate [a-seq]
   (let [shifted (concat (rest a-seq) (take 1 a-seq))]
@@ -159,6 +159,12 @@
      :else (cons b (seq-merge (rest b-seq) a-seq))
      )))
 
+(defn halve [a-seq]
+  (let [n (count a-seq)
+        pivot (int (/ n 2))]
+    [(my-take pivot a-seq)
+     (my-drop pivot a-seq)]))
+
 (defn merge-sort [a-seq]
   (let [length (count a-seq)]
     (if (>= 1 length)
@@ -177,14 +183,15 @@
         (>= 0 n) coll
         :else (my-drop (dec n) (rest coll))))
 
-(defn halve [a-seq]
-  (let [n (count a-seq)
-        pivot (int (/ n 2))]
-    [(my-take pivot a-seq)
-     (my-drop pivot a-seq)]))
+(defn reduce-monotonic [a-seq a]
+  (let [head (first a-seq)]
+    (cond
+     (empty? a-seq) (vector a)
+     (>= a head) (cons a a-seq)
+     :else a-seq)))
 
 (defn split-into-monotonics [a-seq]
-  [:-])
+    [:-])
 
 (defn permutations [a-set]
   [:-])

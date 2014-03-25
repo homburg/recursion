@@ -122,23 +122,22 @@
     '(())
     (take (count a-seq) (rotate a-seq))))
 
-(defn inc-or-one [n]
-  (if (number? n)
-    (inc n)
-    1))
-
 (defn my-frequencies-helper [freqs a-seq]
   (if (empty? a-seq)
     freqs
-    (my-frequencies-helper
-     (update-in freqs [(first a-seq)] inc-or-one)
-     (rest a-seq))))
+    (let [head (first a-seq)
+          tail (rest a-seq)]
+      (my-frequencies-helper
+        (update-in freqs [head] (fnil inc 0))
+        tail))))
 
 (defn my-frequencies [a-seq]
   (my-frequencies-helper {} a-seq))
 
 (defn un-frequencies [a-map]
-  (apply concat (map #(apply repeat (reverse %)) a-map)))
+  (mapcat
+    (fn [[c n]] (take n (repeat c)))
+    a-map))
 
 (defn my-take [n coll]
   (if (or (empty? coll) (zero? n))
@@ -149,11 +148,6 @@
   (if (or (zero? n) (empty? coll))
     coll
     (my-drop (dec n) (rest coll))))
-
-(defn halve [a-seq]
-  (let [length (count a-seq)
-        p (int (/ length 2))]
-    (list (my-take p a-seq) (my-drop p a-seq))))
 
 (defn seq-merge [a-seq b-seq]
   (let [a (first a-seq)
@@ -170,6 +164,24 @@
     (if (>= 1 length)
       a-seq
       (apply seq-merge (map merge-sort (halve a-seq))))))
+
+(defn my-take [n coll]
+  (cond (empty? coll) coll
+        (>= 0 n) '()
+        :else (cons
+                (first coll)
+                (my-take (dec n) (rest coll)))))
+
+(defn my-drop [n coll]
+  (cond (empty? coll) coll
+        (>= 0 n) coll
+        :else (my-drop (dec n) (rest coll))))
+
+(defn halve [a-seq]
+  (let [n (count a-seq)
+        pivot (int (/ n 2))]
+    [(my-take pivot a-seq)
+     (my-drop pivot a-seq)]))
 
 (defn split-into-monotonics [a-seq]
   [:-])
